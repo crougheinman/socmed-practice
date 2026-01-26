@@ -1,17 +1,31 @@
 <div class="container">
-  <mat-toolbar color="primary">
+  <mat-toolbar>
     <span>{{ title() }}</span>
     <span class="spacer"></span>
-    <button mat-button>Home</button>
-    <button mat-button>Profile</button>
-    <button mat-button>Feed</button>
+    <button mat-button>
+      <mat-icon
+        fontSet="material-symbols-outlined"
+        style="font-variation-settings: 'FILL' 1"
+        routerLink="/sign-in"
+      >
+        home
+      </mat-icon>
+    </button>
+    <button mat-button>
+      <mat-icon fontSet="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
+        movie
+      </mat-icon>
+    </button>
+    <button mat-button>
+      <mat-icon fontSet="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
+        storefront
+      </mat-icon>
+    </button>
     <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle theme">
-      <mat-icon>{{ getThemeIcon() }}</mat-icon>
+      <mat-icon fontSet="material-symbols-outlined">{{ getThemeIcon() }}</mat-icon>
     </button>
   </mat-toolbar>
 
-  <!-- Debug info -->
-  <div style="padding: 20px; font-size: 14px; color: #666">
-    Current theme: {{ currentTheme() }} | Theme class: {{ themeClass() }}
-  </div>
+  <!-- Router outlet for displaying routed components -->
+  <router-outlet></router-outlet>
 </div>

@@ -1,4 +1,5 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -6,12 +7,12 @@ import { ThemeService } from './theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [MatToolbar, MatButton, MatIcon],
+  imports: [RouterOutlet, RouterLink, MatToolbar, MatButton, MatIcon],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected readonly title = signal('Socmed Practice');
+  protected readonly title = signal('Carhives');
 
   private themeService = inject(ThemeService);
 
