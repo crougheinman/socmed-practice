@@ -9,6 +9,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideEffects } from '@ngrx/effects';
+import { isDevMode } from '@angular/core';
 
 import { routes } from './app.routes';
 
@@ -21,10 +25,18 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideStore(), // ✅ Added: Root store provider
+    provideEffects(), // ✅ Added: Effects provider
+    provideStoreDevtools({
+      // ✅ Added: DevTools for development
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      autoPause: true,
+      trace: false,
+      traceLimit: 75,
+    }),
   ],
 };

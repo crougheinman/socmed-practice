@@ -1,4 +1,4 @@
-<div class="container">
+<div>
   <mat-toolbar>
     <span>{{ title() }}</span>
     <span class="spacer"></span>
@@ -24,8 +24,15 @@
     <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle theme">
       <mat-icon fontSet="material-symbols-outlined">{{ getThemeIcon() }}</mat-icon>
     </button>
+    <button mat-button (click)="signOut()">
+      <mat-icon fontSet="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
+        logout
+      </mat-icon>
+    </button>
   </mat-toolbar>
 
   <!-- Router outlet for displaying routed components -->
-  <router-outlet></router-outlet>
+  <div class="container p-4">
+    <router-outlet></router-outlet>
+  </div>
 </div>

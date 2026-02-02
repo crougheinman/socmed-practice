@@ -22,6 +22,9 @@ import {
   GoogleAuthProvider,
   AuthErrorCodes,
 } from '@angular/fire/auth';
+import { Store } from '@ngrx/store';
+import { AppState, setAuthenticatedUser } from '@app/store';
+import { User } from '@models';
 
 @Component({
   selector: 'app-sign-in',
@@ -48,6 +51,7 @@ import {
 export class SignIn {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
+  private readonly store = inject(Store<AppState>);
 
   signInForm!: FormGroup;
   isLoading = signal(false);
@@ -89,8 +93,22 @@ export class SignIn {
 
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(this.auth, provider);
+      const userCredential = await signInWithPopup(this.auth, provider);
+      const user = userCredential.user;
       // Navigate to main app after successful sign-in
+      this.store.dispatch(
+        setAuthenticatedUser({
+          user: {
+            email: user.email || '',
+            id: user.uid,
+            uid: user.uid,
+            displayName: user.displayName || '',
+            photoURL: user.photoURL || '',
+            phoneNumber: user.phoneNumber || '',
+            providerId: user.providerData[0]?.providerId || '',
+          } as User,
+        }),
+      );
       this.router.navigate(['/']);
     } catch (error: any) {
       console.error('Google sign-in error:', error);

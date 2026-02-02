@@ -4,6 +4,9 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ThemeService } from './theme.service';
+import { Store } from '@ngrx/store';
+import { AppState, signOut } from '@store';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +16,8 @@ import { ThemeService } from './theme.service';
 })
 export class App implements OnInit {
   protected readonly title = signal('Carhives');
+  protected readonly store = inject(Store<AppState>);
+  protected readonly auth = inject(Auth);
 
   private themeService = inject(ThemeService);
 
@@ -41,5 +46,10 @@ export class App implements OnInit {
       default:
         return 'brightness_auto';
     }
+  }
+
+  protected signOut(): void {
+    this.auth.signOut();
+    this.store.dispatch(signOut());
   }
 }
