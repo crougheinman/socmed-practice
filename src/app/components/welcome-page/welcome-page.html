@@ -1,23 +1,34 @@
-<div class="welcome-container text-center">
-  <h1>{{ (vm$ | async)?.welcomeMessage }}</h1>
-  <p class="lead">
-    Your ultimate destination for car enthusiasts! Explore, share, and connect with fellow car
-    lovers around the world.
-  </p>
-
-  <div class="features-section" *ngIf="(vm$ | async)?.showFeatures">
-    <h3>Features</h3>
-    <ul class="features-list">
-      <li *ngFor="let feature of (vm$ | async)?.features">
-        {{ feature }}
-      </li>
-    </ul>
+@if (vm$ | async; as vm) {
+  <div class="d-flex flex-column vh-100">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title> Hello {{ vm.user?.displayName }} </mat-card-title>
+        <mat-card-subtitle>Herding group</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button matButton>Learn More</button>
+      </mat-card-actions>
+    </mat-card>
+    <br />
+    <div class="d-flex" style="gap: 4px">
+      <mat-card appearance="outlined" class="flex-grow-1">
+        <mat-card-header>
+          <mat-card-title>Poodle</mat-card-title>
+          <mat-card-subtitle>Non-sporting group</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions align="end">
+          <button matButton>Learn More</button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Poodle</mat-card-title>
+          <mat-card-subtitle>Non-sporting group</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions align="end">
+          <button matButton>Learn More</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
-
-  <div class="actions-section">
-    <button class="btn btn-primary" (click)="onSignInClick()">Get Started</button>
-    <button class="btn btn-secondary" (click)="onToggleFeatures()">
-      {{ (vm$ | async)?.showFeatures ? 'Hide' : 'Show' }} Features
-    </button>
-  </div>
-</div>
+}

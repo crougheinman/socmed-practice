@@ -1,36 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { AppState, selectAuthenticatedUser } from '@app/store';
+import { Store } from '@ngrx/store';
+import { User } from '@models';
+import { combineLatest, map, Observable, of } from 'rxjs';
 
 export interface WelcomePageFacadeModel {
   welcomeMessage: string;
   features: string[];
   showFeatures: boolean;
+  user: User | null;
 }
 
 export const initialState: WelcomePageFacadeModel = {
   welcomeMessage: 'Welcome!',
   features: [],
   showFeatures: true,
+  user: null,
 };
 
 @Injectable()
 export class WelcomePageFacade {
   vm$: Observable<WelcomePageFacadeModel> = of(initialState);
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private store: Store<AppState>,
+  ) {
     this.vm$ = this.buildViewModel();
   }
 
   private buildViewModel(): Observable<WelcomePageFacadeModel> {
-    const welcomeMessage = this.getWelcomeMessage();
-    const features = this.getFeaturesList();
-
-    return of({
-      welcomeMessage,
-      features,
-      showFeatures: true,
-    });
+    return combineLatest([this.store.select(selectAuthenticatedUser)]).pipe(
+      map(([user]) => ({
+        welcomeMessage: this.getWelcomeMessage(),
+        features: this.getFeaturesList(),
+        showFeatures: true,
+        user,
+      })),
+    );
   }
 
   navigateToSignIn(): void {

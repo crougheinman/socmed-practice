@@ -3,10 +3,27 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { WelcomePageFacade, WelcomePageFacadeModel } from './welcome-page.facade';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-welcome-page',
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCard,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardActions,
+    MatCardTitle,
+    MatButton,
+  ],
   templateUrl: './welcome-page.html',
   styleUrl: './welcome-page.scss',
   providers: [WelcomePageFacade],

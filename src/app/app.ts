@@ -32,7 +32,7 @@ import { AuthService } from './services';
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('Carhives');
+  protected readonly title = signal(import.meta.env['NG_APP_TITLE'] || 'TEMP');
   protected readonly store = inject(Store<AppState>);
   protected readonly auth = inject(Auth);
   protected readonly authService = inject(AuthService);

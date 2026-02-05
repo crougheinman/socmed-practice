@@ -9,6 +9,7 @@ export const routes: Routes = [
   {
     path: '',
     component: WelcomePage,
+    canActivate: [AuthGuard],
   },
   {
     path: 'sign-in',
