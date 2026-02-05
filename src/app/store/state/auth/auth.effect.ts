@@ -25,7 +25,7 @@ export class AuthEffects {
             this.auth
               .signOut()
               .then(() => {
-                this.store.dispatch(fromActions.setAuthenticatedUser({ user: {} as User }));
+                this.store.dispatch(fromActions.setAuthenticatedUser({ user: null }));
                 this.router.navigate(['sign-in']);
               })
               .catch((error) => {

@@ -2,33 +2,62 @@
   <mat-toolbar>
     <span>{{ title() }}</span>
     <span class="spacer"></span>
-    <button mat-button>
-      <mat-icon
-        fontSet="material-symbols-outlined"
-        style="font-variation-settings: 'FILL' 1"
-        routerLink="/sign-in"
-      >
-        home
-      </mat-icon>
+    <button
+      matIconButton
+      class="example-icon favorite-icon"
+      aria-label="Example icon-button with heart icon"
+    >
+      <mat-icon>favorite</mat-icon>
     </button>
-    <button mat-button>
-      <mat-icon fontSet="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
-        movie
-      </mat-icon>
+    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>share</mat-icon>
     </button>
-    <button mat-button>
-      <mat-icon fontSet="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
-        storefront
-      </mat-icon>
-    </button>
-    <button mat-icon-button (click)="toggleTheme()" aria-label="Toggle theme">
-      <mat-icon fontSet="material-symbols-outlined">{{ getThemeIcon() }}</mat-icon>
-    </button>
-    <button mat-button (click)="signOut()">
-      <mat-icon fontSet="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
-        logout
-      </mat-icon>
-    </button>
+    @if (user$ | async; as user) {
+      <div class="user-menu">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="userMenu"
+          class="user-avatar-button"
+          aria-label="User menu"
+        >
+          <div class="user-avatar">
+            <img
+              [src]="
+                user.photoURL ||
+                'https://static.vecteezy.com/system/resources/thumbnails/010/886/409/small/login-icon-line-symbol-free-vector.jpg'
+              "
+              alt="User Avatar"
+              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
+            />
+          </div>
+        </button>
+        <mat-menu #userMenu="matMenu" xPosition="before">
+          <div class="user-menu-header" mat-menu-item disabled>
+            <div class="user-info">
+              <div class="menu-avatar">
+                <img
+                  [src]="
+                    user.photoURL ||
+                    'https://static.vecteezy.com/system/resources/thumbnails/010/886/409/small/login-icon-line-symbol-free-vector.jpg'
+                  "
+                  alt="User Avatar"
+                  style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover"
+                />
+              </div>
+              <div class="user-details">
+                <div class="user-name text-light">{{ user.displayName || 'User' }}</div>
+                <div class="user-email">{{ user.email }}</div>
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="signOut()">
+            <mat-icon>logout</mat-icon>
+            <span>Sign Out</span>
+          </button>
+        </mat-menu>
+      </div>
+    }
   </mat-toolbar>
 
   <!-- Router outlet for displaying routed components -->

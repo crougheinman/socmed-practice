@@ -36,8 +36,8 @@
           <a href="#" class="forgot-password">Forgot password?</a>
         </div>
 
-        <div *ngIf="errorMessage()" class="error-message">
-          {{ errorMessage() }}
+        <div *ngIf="(vm$ | async)?.errorMessage" class="error-message">
+          {{ (vm$ | async)?.errorMessage }}
         </div>
 
         <button
@@ -45,11 +45,15 @@
           color="primary"
           class="full-width sign-in-button"
           type="submit"
-          [disabled]="isLoading() || signInForm.invalid"
+          [disabled]="(vm$ | async)?.isLoading || signInForm.invalid"
         >
-          <mat-icon fontSet="material-symbols-outlined" *ngIf="isLoading()">refresh</mat-icon>
-          <mat-icon fontSet="material-symbols-outlined" *ngIf="!isLoading()">login</mat-icon>
-          {{ isLoading() ? 'Signing In...' : 'Sign In' }}
+          <mat-icon fontSet="material-symbols-outlined" *ngIf="(vm$ | async)?.isLoading"
+            >refresh</mat-icon
+          >
+          <mat-icon fontSet="material-symbols-outlined" *ngIf="!(vm$ | async)?.isLoading"
+            >login</mat-icon
+          >
+          {{ (vm$ | async)?.isLoading ? 'Signing In...' : 'Sign In' }}
         </button>
 
         <div class="divider">
@@ -61,7 +65,7 @@
           class="full-width google-button"
           type="button"
           (click)="onSignInWithGoogle()"
-          [disabled]="isLoading()"
+          [disabled]="(vm$ | async)?.isLoading"
         >
           <mat-icon fontSet="material-symbols-outlined">account_circle</mat-icon>
           Sign in with Google

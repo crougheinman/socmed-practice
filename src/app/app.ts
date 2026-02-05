@@ -1,55 +1,45 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { Component, signal, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { ThemeService } from './theme.service';
+import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
+import { MatDivider } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
 import { Store } from '@ngrx/store';
-import { AppState, signOut } from '@store';
+import { AppState, selectAuthenticatedUser } from '@store';
 import { Auth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
+import { User } from '@models';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './services';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, MatToolbar, MatButton, MatIcon],
+  imports: [
+    RouterOutlet,
+    MatToolbar,
+    MatIcon,
+    MatIconButton,
+    MatMenu,
+    MatMenuTrigger,
+    MatDivider,
+    CommonModule,
+    MatMenuItem,
+    MatListModule,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
+export class App {
   protected readonly title = signal('Carhives');
   protected readonly store = inject(Store<AppState>);
   protected readonly auth = inject(Auth);
+  protected readonly authService = inject(AuthService);
+  protected readonly user$: Observable<User | null> = this.store.select(selectAuthenticatedUser);
 
-  private themeService = inject(ThemeService);
-
-  // Expose theme service signals to template
-  protected readonly currentTheme = this.themeService.currentTheme;
-  protected readonly themeClass = this.themeService.themeClass;
-
-  ngOnInit(): void {
-    this.themeService.initializeTheme();
-  }
-
-  protected toggleTheme(): void {
-    console.log('Before toggle:', this.themeService.currentTheme());
-    this.themeService.toggleTheme();
-    console.log('After toggle:', this.themeService.currentTheme());
-    console.log('HTML classes:', document.documentElement.className);
-  }
-
-  protected getThemeIcon(): string {
-    const theme = this.currentTheme();
-    switch (theme) {
-      case 'light':
-        return 'light_mode';
-      case 'dark':
-        return 'dark_mode';
-      default:
-        return 'brightness_auto';
-    }
-  }
-
-  protected signOut(): void {
-    this.auth.signOut();
-    this.store.dispatch(signOut());
+  protected async signOut(): Promise<void> {
+    await this.auth.signOut();
+    await this.authService.logout();
   }
 }

@@ -6,12 +6,12 @@ import { User } from '@models';
 
 export const authState = createFeatureSelector<AuthState>(AUTH_FEATURE_KEY);
 
-export const selectAuthenticatedUser = createSelector<AppState, [AuthState], User>(
-    authState,
-    (authStateDate) => authStateDate?.user
+export const selectAuthenticatedUser = createSelector<AppState, [AuthState], User | null>(
+  authState,
+  (authStateData) => authStateData?.user || null,
 );
 
 export const selectUserIsAuthenticated = createSelector<AppState, [AuthState], boolean | undefined>(
-    authState,
-    (authStateData) => authStateData?.isAuthenticated,
+  authState,
+  (authStateData) => authStateData?.isAuthenticated,
 );

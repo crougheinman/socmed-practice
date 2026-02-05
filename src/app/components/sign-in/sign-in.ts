@@ -1,6 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
   MatCard,
@@ -15,16 +14,9 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
-import {
-  Auth,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  AuthErrorCodes,
-} from '@angular/fire/auth';
-import { Store } from '@ngrx/store';
-import { AppState, setAuthenticatedUser } from '@app/store';
-import { User } from '@models';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SignInFacade, SignInFacadeModel } from './sign-in.facade';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -47,22 +39,20 @@ import { User } from '@models';
   ],
   templateUrl: './sign-in.html',
   styleUrl: './sign-in.scss',
+  providers: [SignInFacade],
 })
 export class SignIn {
-  private readonly auth = inject(Auth);
-  private readonly router = inject(Router);
-  private readonly store = inject(Store<AppState>);
-
+  vm$: Observable<SignInFacadeModel>;
   signInForm!: FormGroup;
-  isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
 
-  constructor() {
+  constructor(private facade: SignInFacade) {
     this.signInForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
       rememberMe: new FormControl(false),
     });
+
+    this.vm$ = this.facade.vm$;
   }
 
   async onSignIn(): Promise<void> {
@@ -71,71 +61,11 @@ export class SignIn {
     }
 
     const { email, password } = this.signInForm.value;
-
-    this.errorMessage.set(null);
-    this.isLoading.set(true);
-
-    try {
-      await signInWithEmailAndPassword(this.auth, email, password);
-      // Navigate to main app after successful sign-in
-      this.router.navigate(['/']);
-    } catch (error: any) {
-      console.error('Sign-in error:', error);
-      this.handleAuthError(error);
-    } finally {
-      this.isLoading.set(false);
-    }
+    await this.facade.signInWithEmail(email, password);
   }
 
   async onSignInWithGoogle(): Promise<void> {
-    this.errorMessage.set(null);
-    this.isLoading.set(true);
-
-    try {
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(this.auth, provider);
-      const user = userCredential.user;
-      // Navigate to main app after successful sign-in
-      this.store.dispatch(
-        setAuthenticatedUser({
-          user: {
-            email: user.email || '',
-            id: user.uid,
-            uid: user.uid,
-            displayName: user.displayName || '',
-            photoURL: user.photoURL || '',
-            phoneNumber: user.phoneNumber || '',
-            providerId: user.providerData[0]?.providerId || '',
-          } as User,
-        }),
-      );
-      this.router.navigate(['/']);
-    } catch (error: any) {
-      console.error('Google sign-in error:', error);
-      this.errorMessage.set('Failed to sign in with Google. Please try again.');
-    } finally {
-      this.isLoading.set(false);
-    }
-  }
-
-  private handleAuthError(error: any): void {
-    const errorMessage = error.message || '';
-
-    if (errorMessage.includes(AuthErrorCodes.USER_DELETED)) {
-      this.errorMessage.set('User not found. Please check your email.');
-    } else if (errorMessage.includes(AuthErrorCodes.INVALID_PASSWORD)) {
-      this.errorMessage.set('Invalid password. Please try again.');
-    } else if (errorMessage.includes(AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER)) {
-      this.errorMessage.set('Too many attempts. Please try again later.');
-    } else if (errorMessage.includes(AuthErrorCodes.OPERATION_NOT_ALLOWED)) {
-      this.errorMessage.set('Operation not allowed. Please contact support.');
-    } else if (errorMessage.includes(AuthErrorCodes.INTERNAL_ERROR)) {
-      this.errorMessage.set('Internal error. Please try again later.');
-    } else if (errorMessage.includes(AuthErrorCodes.INVALID_EMAIL)) {
-      this.errorMessage.set('Invalid email format. Please check your email.');
-    } else {
-      this.errorMessage.set('An error occurred during sign-in. Please try again.');
-    }
+    await this.facade.signInWithGoogle();
   }
 
   get email() {

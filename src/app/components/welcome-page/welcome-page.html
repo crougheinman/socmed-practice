@@ -1,9 +1,23 @@
-<div class="text-center">
-  <h1>Welcome to CARHIVES</h1>
+<div class="welcome-container text-center">
+  <h1>{{ (vm$ | async)?.welcomeMessage }}</h1>
   <p class="lead">
     Your ultimate destination for car enthusiasts! Explore, share, and connect with fellow car
     lovers around the world.
   </p>
 
-  <div></div>
+  <div class="features-section" *ngIf="(vm$ | async)?.showFeatures">
+    <h3>Features</h3>
+    <ul class="features-list">
+      <li *ngFor="let feature of (vm$ | async)?.features">
+        {{ feature }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="actions-section">
+    <button class="btn btn-primary" (click)="onSignInClick()">Get Started</button>
+    <button class="btn btn-secondary" (click)="onToggleFeatures()">
+      {{ (vm$ | async)?.showFeatures ? 'Hide' : 'Show' }} Features
+    </button>
+  </div>
 </div>
