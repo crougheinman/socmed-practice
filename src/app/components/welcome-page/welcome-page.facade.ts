@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppState, selectAuthenticatedUser } from '@app/store';
 import { Store } from '@ngrx/store';
-import { User } from '@models';
+import { User, Order } from '@models';
 import { combineLatest, map, Observable, of } from 'rxjs';
 
 export interface WelcomePageFacadeModel {
@@ -10,6 +10,7 @@ export interface WelcomePageFacadeModel {
   features: string[];
   showFeatures: boolean;
   user: User | null;
+  orders: Order[];
 }
 
 export const initialState: WelcomePageFacadeModel = {
@@ -17,6 +18,7 @@ export const initialState: WelcomePageFacadeModel = {
   features: [],
   showFeatures: true,
   user: null,
+  orders: [],
 };
 
 @Injectable()
@@ -37,6 +39,7 @@ export class WelcomePageFacade {
         features: this.getFeaturesList(),
         showFeatures: true,
         user,
+        orders: this.getOrders(),
       })),
     );
   }
@@ -68,6 +71,41 @@ export class WelcomePageFacade {
       'Responsive design for all devices',
       'State management with NgRx',
       'Material Design components',
+    ];
+  }
+
+  private getOrders(): Order[] {
+    return [
+      {
+        id: '1',
+        orderNumber: '#1001',
+        customerName: 'John Doe',
+        items: '2x Chocolate Chip, 1x Oatmeal Raisin',
+        timePlaced: 'Placed 15 mins ago',
+        status: 'preparing',
+        actionLabel: 'Mark Ready',
+        actionIcon: 'check_circle',
+      },
+      {
+        id: '2',
+        orderNumber: '#1002',
+        customerName: 'Jane Smith',
+        items: '3x Peanut Butter, 1x Double Chocolate',
+        timePlaced: 'Placed 8 mins ago',
+        status: 'ready',
+        actionLabel: 'Mark Delivered',
+        actionIcon: 'local_shipping',
+      },
+      {
+        id: '3',
+        orderNumber: '#1003',
+        customerName: 'Bob Johnson',
+        items: '1x Sugar Cookie, 2x Macadamia Nut',
+        timePlaced: 'Placed 22 mins ago',
+        status: 'baking',
+        actionLabel: 'Start Preparing',
+        actionIcon: 'play_arrow',
+      },
     ];
   }
 }

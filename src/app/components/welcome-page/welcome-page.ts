@@ -9,8 +9,11 @@ import {
   MatCardHeader,
   MatCardSubtitle,
   MatCardTitle,
+  MatCardContent,
 } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatChip } from '@angular/material/chips';
 
 @Component({
   selector: 'app-welcome-page',
@@ -22,7 +25,10 @@ import { MatButton } from '@angular/material/button';
     MatCardSubtitle,
     MatCardActions,
     MatCardTitle,
+    MatCardContent,
     MatButton,
+    MatIcon,
+    MatChip,
   ],
   templateUrl: './welcome-page.html',
   styleUrl: './welcome-page.scss',
@@ -41,6 +47,32 @@ export class WelcomePage {
 
   onDashboardClick(): void {
     this.facade.navigateToDashboard();
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'baking':
+        return 'warn';
+      case 'preparing':
+        return 'accent';
+      case 'ready':
+        return 'primary';
+      default:
+        return 'basic';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'baking':
+        return 'Baking';
+      case 'preparing':
+        return 'Preparing';
+      case 'ready':
+        return 'Ready';
+      default:
+        return 'Unknown';
+    }
   }
 
   onToggleFeatures(): void {

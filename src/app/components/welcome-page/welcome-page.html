@@ -2,33 +2,41 @@
   <div class="d-flex flex-column vh-100">
     <mat-card appearance="outlined">
       <mat-card-header>
-        <mat-card-title> Hello {{ vm.user?.displayName }} </mat-card-title>
-        <mat-card-subtitle>Herding group</mat-card-subtitle>
+        <mat-card-title>
+          <h3>Hello {{ vm.user?.displayName }}</h3>
+        </mat-card-title>
+        <mat-card-subtitle> </mat-card-subtitle>
       </mat-card-header>
-      <mat-card-actions>
-        <button matButton>Learn More</button>
-      </mat-card-actions>
+      <mat-card-actions align="end"> </mat-card-actions>
     </mat-card>
     <br />
-    <div class="d-flex" style="gap: 4px">
-      <mat-card appearance="outlined" class="flex-grow-1">
-        <mat-card-header>
-          <mat-card-title>Poodle</mat-card-title>
-          <mat-card-subtitle>Non-sporting group</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions align="end">
-          <button matButton>Learn More</button>
-        </mat-card-actions>
-      </mat-card>
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>Poodle</mat-card-title>
-          <mat-card-subtitle>Non-sporting group</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions align="end">
-          <button matButton>Learn More</button>
-        </mat-card-actions>
-      </mat-card>
+    <div class="d-flex" style="gap: 16px">
+      @for (order of vm.orders; track order.id) {
+        <mat-card appearance="outlined" class="order-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>shopping_cart</mat-icon>
+              {{ order.orderNumber }}
+            </mat-card-title>
+            <mat-card-subtitle>{{ order.customerName }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="order-details">
+              <div class="order-items">{{ order.items }}</div>
+              <div class="order-time">{{ order.timePlaced }}</div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <mat-chip [color]="getStatusColor(order.status)" selected>{{
+              getStatusLabel(order.status)
+            }}</mat-chip>
+            <button mat-raised-button color="primary">
+              <mat-icon>{{ order.actionIcon }}</mat-icon>
+              {{ order.actionLabel }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
     </div>
   </div>
 }
